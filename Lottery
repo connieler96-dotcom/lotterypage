@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>线上活动 - 你真的懂咩抽签板</title>
+    <title>线上活动 - 幸运大抽奖全自动版</title>
     <style>
         body { 
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
@@ -14,12 +14,12 @@
             align-items: center; 
             min-height: 100vh; 
             margin: 0;
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
         }
 
         .container { 
-            width: 800px; 
+            width: 850px; 
             background: linear-gradient(135deg, #11013b 0%, #000000 100%);
             padding: 40px; 
             border-radius: 24px; 
@@ -36,31 +36,29 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .select-group {
-            margin-bottom: 25px;
-        }
-        select { 
-            font-size: 16px; 
-            padding: 10px 20px; 
-            background: #111; 
-            color: #fff; 
-            border: 1px solid #3403b4; 
-            border-radius: 8px;
-            cursor: pointer;
-            outline: none;
+        .current-stage-badge {
+            display: inline-block;
+            background: rgba(52, 3, 180, 0.6);
+            border: 1px solid #3403b4;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .display-box { 
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 20px;
-            margin: 25px 0;
-            min-height: 100px;
+            padding: 25px;
+            margin: 15px 0 25px 0;
+            min-height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 40px; 
+            font-size: 38px; 
             color: #ffffff; 
             font-weight: bold;
             letter-spacing: 2px;
@@ -78,90 +76,116 @@
             box-shadow: 0 0 20px rgba(252, 12, 151, 0.5);
             transition: all 0.3s ease;
             letter-spacing: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .btn-draw:hover { 
             background: #d0077b; 
             box-shadow: 0 0 25px rgba(252, 12, 151, 0.8);
-            transform: scale(1.03);
+            transform: scale(1.02);
         }
-        .btn-draw.active {
-            background: #3403b4;
-            box-shadow: 0 0 20px rgba(52, 3, 180, 0.6);
+        .btn-draw:disabled {
+            background: #444 !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+        }
+        .btn-draw.stage-next {
+            background: #fff600;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 246, 0, 0.4);
+        }
+        .btn-draw.stage-next:hover {
+            background: #d4cc00;
         }
 
         .summary-title {
             display: none;
             color: #fff600; 
-            font-size: 22px;
-            margin: 25px 0 15px 0;
+            font-size: 24px;
+            margin: 30px 0 15px 0;
             font-weight: bold;
             letter-spacing: 1px;
         }
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 10px;
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-        .result-grid::-webkit-scrollbar { width: 6px; }
-        .result-grid::-webkit-scrollbar-thumb { background: #3403b4; border-radius: 3px; }
 
-        .result-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(52, 3, 180, 0.3);
-            padding: 15px;
+        /* 列表展示样式优化 */
+        .list-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
+            overflow: hidden;
+            margin-top: 15px;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
             text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            animation: fadeInUp 0.3s ease forwards;
-            opacity: 0;
-        }
-        .card-teacher {
-            font-size: 20px;
-            color: #ffffff; 
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .card-staff {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .highlight-staff {
-            color: #fff600; 
+            font-size: 18px;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .list-table th {
+            background: rgba(52, 3, 180, 0.3);
+            color: #fff600;
+            padding: 14px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(52, 3, 180, 0.5);
         }
+
+        .list-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .list-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .list-table tr {
+            opacity: 0;
+            animation: rowFadeIn 0.3s ease forwards;
+        }
+
+        .highlight-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes rowFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎉 线上大抽奖系统 🎉</h1>
+    <h1>🎉 你真的懂咩？ 🎉</h1>
     
-    <div class="select-group">
-        <select id="prize-select" onchange="resetDisplay()">
-            <option value="A">🎁 幸运抽奖：A组轮次</option>
-            <option value="B">🎁 幸运抽奖：B组轮次</option>
-        </select>
-    </div>
+    <!-- 顶部状态指示，代替下拉框，更具仪式感 -->
+    <div class="current-stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
 
     <div class="display-box" id="main-screen">
-        等待开奖
+        等待开启
     </div>
 
-    <button id="action-btn" class="btn-draw" onclick="toggleDraw()">开始抽奖</button>
+    <button id="action-btn" class="btn-draw" onclick="startAutoDraw()">开始抽奖</button>
 
-    <div class="summary-title" id="summary-hd">✨ 本轮中奖组合最终总结 ✨</div>
-    <div class="result-grid" id="result-container"></div>
+    <div class="summary-title" id="summary-hd">✨ 本轮中奖组合最终结果 ✨</div>
+    <div class="list-container" id="list-wrapper">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">序号</th>
+                    <th style="width: 45%;">👤 获得者 (Teacher)</th>
+                    <th style="width: 45%;">🏆 关联组合 (LC / EC)</th>
+                </tr>
+            </thead>
+            <tbody id="list-body">
+                <!-- 列表数据动态插入 -->
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -197,65 +221,76 @@
         { teacher: "Qing (Part Time)", lc: "Crystal", ec: "" }
     ];
 
+    let currentStage = 'A'; // 追踪阶段：'A', 'A_DONE', 'B', 'B_DONE'
     let timer = null;
-    let isRolling = false;
 
-    function resetDisplay() {
-        if (!isRolling) {
-            document.getElementById('main-screen').innerText = "等待开奖";
-            document.getElementById('result-container').innerHTML = "";
-            document.getElementById('summary-hd').style.display = "none";
-        }
-    }
-
-    function toggleDraw() {
+    function startAutoDraw() {
         const btn = document.getElementById('action-btn');
         const mainScreen = document.getElementById('main-screen');
-        const container = document.getElementById('result-container');
+        const listWrapper = document.getElementById('list-wrapper');
+        const listBody = document.getElementById('list-body');
         const summaryHd = document.getElementById('summary-hd');
-        const selectedGroup = document.getElementById('prize-select').value;
-        
-        const currentPool = (selectedGroup === 'A') ? groupA : groupB;
+        const stageBadge = document.getElementById('stage-badge');
 
-        if (!isRolling) {
-            isRolling = true;
-            btn.innerText = "停止";
-            btn.classList.add('active');
+        // 状态分流逻辑
+        if (currentStage === 'A_DONE') {
+            // A组抽完，点击进入B组准备状态
+            currentStage = 'B';
+            stageBadge.innerText = "当前环节：🎁 B 组幸运抽取";
+            stageBadge.style.background = "rgba(252, 12, 151, 0.3)";
+            stageBadge.style.borderColor = "#fc0c97";
+            mainScreen.innerText = "等待开启";
+            listWrapper.style.display = "none";
             summaryHd.style.display = "none";
-            container.innerHTML = "";
-            
-            timer = setInterval(() => {
-                let randIdx = Math.floor(Math.random() * currentPool.length);
-                mainScreen.innerText = `正在计算：${currentPool[randIdx].teacher}`;
-            }, 50);
-            
-        } else {
-            isRolling = false;
-            clearInterval(timer);
+            listBody.innerHTML = "";
             btn.innerText = "开始抽奖";
-            btn.classList.remove('active');
-
-            mainScreen.innerText = "🎉 抽取完成！";
-            summaryHd.style.display = "block";
-
-            // 彻底去除洗牌随机，严格按照上面列表的 100% 原始数据直接输出
-            currentPool.forEach((item, index) => {
-                let card = document.createElement('div');
-                card.className = 'result-card';
-                card.style.animationDelay = `${index * 0.04}s`; // 快速梯次弹出
-
-                let staffText = [];
-                if(item.lc) staffText.push(`<span class="highlight-staff">LC:</span> ${item.lc}`);
-                if(item.ec) staffText.push(`<span class="highlight-staff">EC:</span> ${item.ec}`);
-                
-                card.innerHTML = `
-                    <div class="card-teacher">👤 教师: ${item.teacher}</div>
-                    <div class="card-staff">${staffText.join(' &nbsp;&nbsp; ') || '✨ 独立单元'}</div>
-                `;
-                container.appendChild(card);
-            });
+            btn.className = "btn-draw";
+            return;
         }
-    }
-</script>
-</body>
-</html>
+
+        const currentPool = (currentStage === 'A') ? groupA : groupB;
+
+        // 禁用按钮，防止滚动期间误触
+        btn.disabled = true;
+        listWrapper.style.display = "none";
+        summaryHd.style.display = "none";
+        listBody.innerHTML = "";
+
+        // 开始倒计时滚动假象
+        timer = setInterval(() => {
+            let randIdx = Math.floor(Math.random() * currentPool.length);
+            mainScreen.innerText = `🎲 正在计算中：${currentPool[randIdx].teacher}`;
+        }, 50);
+
+        // 3秒钟后全自动停止并列出数据
+        setTimeout(() => {
+            clearInterval(timer);
+            btn.disabled = false;
+            mainScreen.innerText = "🎉 抽取成功！";
+            summaryHd.style.display = "block";
+            listWrapper.style.display = "block";
+
+            // 严格按原本名单顺序输出列表结构
+            currentPool.forEach((item, index) => {
+                let tr = document.createElement('tr');
+                tr.style.animationDelay = `${index * 0.05}s`; // 列表行优雅地依次滑入
+
+                let staffDetails = [];
+                if(item.lc) staffDetails.push(`<span class="highlight-label">LC:</span>${item.lc}`);
+                if(item.ec) staffDetails.push(`<span class="highlight-label">EC:</span>${item.ec}`);
+                let staffText = staffDetails.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
+
+                tr.innerHTML = `
+                    <td style="color: #fff600; font-weight: bold;">${index + 1}</td>
+                    <td style="font-weight: bold;">${item.teacher}</td>
+                    <td>${staffText}</td>
+                `;
+                listBody.appendChild(tr);
+            });
+
+            // 智能更新下一步按钮功能，不用再点开始抽奖
+            if (currentStage === 'A') {
+                currentStage = 'A_DONE';
+                btn.innerText = "➡️ 切换至 B 组抽奖";
+                btn.className = "btn-draw stage-next";
+            } else {
