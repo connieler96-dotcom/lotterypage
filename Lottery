@@ -2,42 +2,45 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>线上活动 - 幸运大抽奖终极总结版</title>
+    <title>线上活动 - 幸运大抽奖大总榜版</title>
     <style>
-        body { font-family: sans-serif; background-color: #000; color: rgba(255,255,255,0.85); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { width: 850px; background: linear-gradient(135deg, #11013b 0%, #000 100%); padding: 40px; border-radius: 24px; border: 2px solid #3403b4; box-shadow: 0 0 30px rgba(52,3,180,0.4); text-align: center; transition: width 0.4s ease; }
-        h1 { font-size: 32px; color: #fff; margin-top: 0; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .stage-badge { display: inline-block; background: rgba(52,3,180,0.6); border: 1px solid #3403b4; padding: 6px 20px; border-radius: 20px; font-size: 16px; margin-bottom: 20px; }
-        .display-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; margin: 15px 0 25px 0; min-height: 80px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: #fff; font-weight: bold; }
-        .btn-draw { font-size: 22px; font-weight: bold; padding: 14px 60px; cursor: pointer; background: #fc0c97; color: white; border: none; border-radius: 50px; box-shadow: 0 0 20px rgba(252,12,151,0.5); transition: all 0.3s ease; outline: none; }
-        .btn-draw:hover { background: #d0077b; transform: scale(1.02); }
-        .btn-draw:disabled { background: #444 !important; box-shadow: none !important; cursor: not-allowed; color: #aaa; }
-        .btn-draw.stage-next { background: #fff600; color: #000; box-shadow: 0 0 20px rgba(255,246,0,0.4); }
-        .summary-title { display: none; color: #fff600; font-size: 24px; margin: 30px 0 15px 0; font-weight: bold; }
-        .list-container { display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; max-height: 420px; overflow-y: auto; margin-top: 15px; }
-        .list-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 18px; }
-        .list-table th { background: #1a0259; color: #fff600; padding: 14px 20px; border-bottom: 1px solid #3403b4; position: sticky; top: 0; z-index: 10; }
-        .list-table td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff; }
-        .list-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-        .fade-in-row { opacity: 0; animation: rowFadeIn 0.15s ease forwards; }
-        .hl-label { color: rgba(255,255,255,0.5); font-size: 14px; margin-right: 5px; }
-        .group-tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
-        .tag-a { background: rgba(52, 3, 180, 0.4); color: #fff; border: 1px solid #3403b4; }
-        .tag-b { background: rgba(252, 12, 151, 0.2); color: #fc0c97; border: 1px solid #fc0c97; }
-        @keyframes rowFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: sans-serif; background: #000; color: rgba(255,255,255,.85); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .box { width: 820px; background: linear-gradient(135deg, #11013b 0%, #000 100%); padding: 40px; border-radius: 24px; border: 2px solid #3403b4; box-shadow: 0 0 30px rgba(52,3,180,.4); text-align: center; }
+        h1 { font-size: 32px; color: #fff; margin: 0 0 10px 0; text-shadow: 0 0 10px rgba(255,255,255,.5); }
+        .badge { display: inline-block; background: rgba(52,3,180,.6); border: 1px solid #3403b4; padding: 6px 20px; border-radius: 20px; font-size: 16px; margin-bottom: 20px; transition: all .3s; }
+        .screen { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 25px; margin: 15px 0 25px 0; min-height: 80px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: #fff; font-weight: bold; }
+        .btn { font-size: 22px; font-weight: bold; padding: 14px 60px; cursor: pointer; background: #fc0c97; color: #fff; border: none; border-radius: 50px; box-shadow: 0 0 20px rgba(252,12,151,.5); transition: all .3s ease; outline: none; }
+        .btn:hover { background: #d0077b; transform: scale(1.02); }
+        .btn:disabled { background: #444 !important; box-shadow: none !important; cursor: not-allowed; color: #aaa; }
+        .btn.next { background: #fff600; color: #000; box-shadow: 0 0 20px rgba(255,246,0,.4); }
+        .btn.next:hover { background: #d4cc00; }
+        .title { display: none; color: #fff600; font-size: 24px; margin: 30px 0 15px 0; font-weight: bold; }
+        .list-wrap { display: none; background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; max-height: 400px; overflow-y: auto; margin-top: 15px; }
+        .list-wrap::-webkit-scrollbar { width: 6px; }
+        .list-wrap::-webkit-scrollbar-thumb { background: #3403b4; border-radius: 3px; }
+        .tbl { width: 100%; border-collapse: collapse; text-align: left; font-size: 18px; }
+        .tbl th { background: #1a0259; color: #fff600; padding: 14px 20px; border-bottom: 1px solid #3403b4; position: sticky; top: 0; z-index: 10; }
+        .tbl td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,.05); color: #fff; }
+        .tbl tr:nth-child(even) { background: rgba(255,255,255,.02); }
+        .row-in { opacity: 0; animation: rIn 0.15s ease forwards; }
+        .lbl { color: rgba(255,255,255,.5); font-size: 14px; margin-right: 5px; }
+        .tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+        .t-a { background: rgba(52,3,180,.4); color: #fff; border: 1px solid #3403b4; }
+        .t-b { background: rgba(252,12,151,.2); color: #fc0c97; border: 1px solid #fc0c97; }
+        @keyframes rIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-container">
+<div class="box">
     <h1>🎉 你真的懂咩？ 🎉</h1>
-    <div class="stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
-    <div class="display-box" id="main-screen">等待开启</div>
-    <button id="action-btn" class="btn-draw" onclick="handleButtonClick()">开始抽奖</button>
+    <div class="badge" id="s-badge">当前环节：🎁 A 组幸运抽取</div>
+    <div class="screen" id="m-screen">等待开启</div>
+    <button id="act-btn" class="btn" onclick="handleDrawFlow()">开始抽奖</button>
 
-    <div class="summary-title" id="summary-hd">✨ 本轮中奖组合最终结果 ✨</div>
-    <div class="list-container" id="list-wrapper">
-        <table class="list-table">
+    <div class="title" id="sm-hd">✨ 本轮中奖组合最终结果 ✨</div>
+    <div class="list-wrap" id="l-wrap">
+        <table class="tbl">
             <thead>
                 <tr>
                     <th style="width: 10%;">序号</th>
@@ -45,7 +48,7 @@
                     <th style="width: 45%;">🏆 关联组合 (LC / EC)</th>
                 </tr>
             </thead>
-            <tbody id="list-body"></tbody>
+            <tbody id="l-body"></tbody>
         </table>
     </div>
 </div>
@@ -82,128 +85,123 @@
         { teacher: "Qing (Part Time)", lc: "Crystal", ec: "" }
     ];
 
-    let currentStage = 'START_A'; // 'START_A', 'DONE_A', 'START_B', 'DONE_B', 'SHOW_ALL'
+    let step = 1; 
     let timer = null;
 
-    function handleButtonClick() {
-        const btn = document.getElementById('action-btn');
-        const mainScreen = document.getElementById('main-screen');
-        const listWrapper = document.getElementById('list-wrapper');
-        const listBody = document.getElementById('list-body');
-        const summaryHd = document.getElementById('summary-hd');
-        const stageBadge = document.getElementById('stage-badge');
+    function handleDrawFlow() {
+        const btn = document.getElementById('act-btn');
+        const mScreen = document.getElementById('m-screen');
+        const lWrap = document.getElementById('l-wrap');
+        const lBody = document.getElementById('l-body');
+        const smHd = document.getElementById('sm-hd');
+        const sBadge = document.getElementById('s-badge');
 
-        if (currentStage === 'START_A') {
-            runRollingAnimation(groupA, () => {
-                currentStage = 'DONE_A';
+        if (step === 1) {
+            btn.disabled = true;
+            lWrap.style.display = "none";
+            smHd.style.display = "none";
+            lBody.innerHTML = "";
+
+            timer = setInterval(() => {
+                let idx = Math.floor(Math.random() * groupA.length);
+                mScreen.innerText = `🎲 正在计算中：${groupA[idx].teacher}`;
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                mScreen.innerText = "🎉 A组抽取成功！";
+                smHd.innerText = "✨ A组中奖组合最终结果 ✨";
+                smHd.style.display = "block";
+                lWrap.style.display = "block";
+                renderRows(groupA);
+                step = 2;
                 btn.innerText = "➡️ 切换至 B 组抽奖";
-                btn.className = "btn-draw stage-next";
+                btn.className = "btn next";
                 btn.disabled = false;
-            });
+            }, 3000);
         } 
-        else if (currentStage === 'DONE_A') {
-            currentStage = 'START_B';
-            stageBadge.innerText = "当前环节：🎁 B 组幸运抽取";
-            stageBadge.style.background = "rgba(252, 12, 151, 0.3)";
-            stageBadge.style.borderColor = "#fc0c97";
-            mainScreen.innerText = "等待开启";
-            listWrapper.style.display = "none";
-            summaryHd.style.display = "none";
-            listBody.innerHTML = "";
+        else if (step === 2) {
+            step = 3;
+            sBadge.innerText = "当前环节：🎁 B 组幸运抽取";
+            sBadge.style.background = "rgba(252, 12, 151, .3)";
+            sBadge.style.borderColor = "#fc0c97";
+            mScreen.innerText = "等待开启";
+            lWrap.style.display = "none";
+            smHd.style.display = "none";
+            lBody.innerHTML = "";
             btn.innerText = "开始抽奖";
-            btn.className = "btn-draw";
+            btn.className = "btn";
         } 
-        else if (currentStage === 'START_B') {
-            runRollingAnimation(groupB, () => {
-                currentStage = 'DONE_B';
+        else if (step === 3) {
+            btn.disabled = true;
+            lWrap.style.display = "none";
+            smHd.style.display = "none";
+            lBody.innerHTML = "";
+
+            timer = setInterval(() => {
+                let idx = Math.floor(Math.random() * groupB.length);
+                mScreen.innerText = `🎲 正在计算中：${groupB[idx].teacher}`;
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                mScreen.innerText = "🎉 B组抽取成功！";
+                smHd.innerText = "✨ B组中奖组合最终结果 ✨";
+                smHd.style.display = "block";
+                lWrap.style.display = "block";
+                renderRows(groupB);
+                step = 4;
                 btn.innerText = "📊 生成 A + B 完整大总榜";
-                btn.className = "btn-draw stage-next";
+                btn.className = "btn next";
                 btn.disabled = false;
-            });
+            }, 3000);
         }
-        else if (currentStage === 'DONE_B') {
-            // 最后一气呵成：展示全量联合大列表
-            currentStage = 'SHOW_ALL';
-            stageBadge.innerText = "最终环节：🏆 完整荣耀大总榜";
-            stageBadge.style.background = "rgba(255, 246, 0, 0.2)";
-            stageBadge.style.borderColor = "#fff600";
-            stageBadge.style.color = "#fff600";
-            mainScreen.innerText = "✨ 恭喜所有获奖组合 ✨";
-            summaryHd.innerText = "✨ A + B 全体中奖组合荣耀总表 ✨";
-            
-            listBody.innerHTML = "";
-            
-            // 合并AB两组名单
+        else if (step === 4) {
+            step = 5;
+            sBadge.innerText = "最终环节：🏆 完整荣耀大总榜";
+            sBadge.style.background = "rgba(255,246,0,.2)";
+            sBadge.style.borderColor = "#fff600";
+            sBadge.style.color = "#fff600";
+            mScreen.innerText = "✨ 恭喜所有获奖组合 ✨";
+            smHd.innerText = "✨ A + B 全体中奖组合荣耀总表 ✨";
+            lBody.innerHTML = "";
+
             const fullPool = [
-                ...groupA.map(i => ({...i, group: 'A'})), 
-                ...groupB.map(i => ({...i, group: 'B'}))
+                ...groupA.map(i => ({...i, g: 'A'})), 
+                ...groupB.map(i => ({...i, g: 'B'}))
             ];
 
-            // 渲染25行超大表
-            fullPool.forEach((item, index) => {
-                let tr = document.createElement('tr');
-                tr.className = 'fade-in-row';
-                tr.style.animationDelay = `${index * 0.02}s`; // 超快依次滑入
-
-                let staffDetails = [];
-                if(item.lc) staffDetails.push(`<span class="hl-label">LC:</span>${item.lc}`);
-                if(item.ec) staffDetails.push(`<span class="hl-label">EC:</span>${item.ec}`);
-                let staffText = staffDetails.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
-
-                let groupLabel = item.group === 'A' ? '<span class="group-tag tag-a">A组</span>' : '<span class="group-tag tag-b">B组</span>';
-
-                tr.innerHTML = `
-                    <td style="color: #fff600; font-weight: bold;">${index + 1}</td>
-                    <td style="font-weight: bold;">${item.teacher} ${groupLabel}</td>
-                    <td>${staffText}</td>
-                `;
-                listBody.appendChild(tr);
-            });
-
+            renderRows(fullPool);
             btn.innerText = "✅ 抽奖活动圆满结束";
             btn.disabled = true;
         }
     }
 
-    function runRollingAnimation(pool, onComplete) {
-        const btn = document.getElementById('action-btn');
-        const mainScreen = document.getElementById('main-screen');
-        const listWrapper = document.getElementById('list-wrapper');
-        const listBody = document.getElementById('list-body');
-        const summaryHd = document.getElementById('summary-hd');
+    function renderRows(pool) {
+        const lBody = document.getElementById('l-body');
+        pool.forEach((item, index) => {
+            let tr = document.createElement('tr');
+            tr.className = 'row-in';
+            tr.style.animationDelay = `${index * 0.02}s`;
 
-        btn.disabled = true;
-        listWrapper.style.display = "none";
-        summaryHd.style.display = "none";
-        listBody.innerHTML = "";
+            let details = [];
+            if(item.lc) details.push(`<span class="lbl">LC:</span>${item.lc}`);
+            if(item.ec) details.push(`<span class="lbl">EC:</span>${item.ec}`);
+            let staffText = details.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
 
-        timer = setInterval(() => {
-            let randIdx = Math.floor(Math.random() * pool.length);
-            mainScreen.innerText = `🎲 正在计算中：${pool[randIdx].teacher}`;
-        }, 50);
+            let gLabel = '';
+            if (item.g) {
+                gLabel = item.g === 'A' ? '<span class="tag t-a">A组</span>' : '<span class="tag t-b">B组</span>';
+            }
 
-        setTimeout(() => {
-            clearInterval(timer);
-            mainScreen.innerText = "🎉 抽取成功！";
-            summaryHd.innerText = "✨ 本轮中奖组合最终结果 ✨";
-            summaryHd.style.display = "block";
-            listWrapper.style.display = "block";
-
-            pool.forEach((item, index) => {
-                let tr = document.createElement('tr');
-tr.className = 'fade-in-row';
-tr.style.animationDelay = ${index * 0.04}s;
-let staffDetails = [];
-if(item.lc) staffDetails.push(<span class="hl-label">LC:</span>${item.lc});
-if(item.ec) staffDetails.push(<span class="hl-label">EC:</span>${item.ec});
-let staffText = staffDetails.join('     ') || '独立单元';
-tr.innerHTML = `
-${index + 1}
-${item.teacher}
-${staffText}
-`;
-listBody.appendChild(tr);
-});
-onComplete();
-}, 3000);
-}
+            tr.innerHTML = `
+                <td style="color: #fff600; font-weight: bold;">${index + 1}</td>
+                <td style="font-weight: bold;">${item.teacher} ${gLabel}</td>
+                <td>${staffText}</td>
+            `;
+            lBody.appendChild(tr);
+        });
+    }
+</script>
+</body>
+</html>
