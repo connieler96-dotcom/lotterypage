@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线上活动 - 幸运大抽奖</title>
+    <style>
+        /* 黑色背景 000000 */
+        body { 
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
+            background-color: #000000; 
+            color: rgba(255, 255, 255, 0.85); /* 白色 50% 以上权重 */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 蓝色霓虹渐变边框 #3403b4 10% */
+        .container { 
+            width: 550px; 
+            background: linear-gradient(135deg, #11013b 0%, #000000 100%);
+            padding: 40px; 
+            border-radius: 24px; 
+            border: 2px solid #3403b4;
+            box-shadow: 0 0 30px rgba(52, 3, 180, 0.4);
+            text-align: center; 
+            position: relative;
+        }
+
+        h1 { 
+            font-size: 28px; 
+            color: #ffffff; 
+            margin-top: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* 奖项选择 */
+        .select-group {
+            margin-bottom: 25px;
+        }
+        select { 
+            font-size: 16px; 
+            padding: 10px 20px; 
+            background: #111; 
+            color: #fff; 
+            border: 1px solid #3403b4; 
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* 滚动大屏 */
+        .display-box { 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px 10px;
+            margin: 25px 0;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #roll-teacher { 
+            font-size: 48px; 
+            color: #ffffff; /* 白色 50% */
+            font-weight: bold; 
+            margin: 5px 0;
+            letter-spacing: 1px;
+        }
+        #roll-staff { 
+            font-size: 22px; 
+            color: rgba(255, 255, 255, 0.6); 
+            height: 30px;
+            margin: 5px 0;
+        }
+
+        /* 粉色按钮 #fc0c97 30% */
+        .btn-draw { 
+            font-size: 22px; 
+            font-weight: bold;
+            padding: 14px 60px; 
+            cursor: pointer; 
+            background: #fc0c97; 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            box-shadow: 0 0 20px rgba(252, 12, 151, 0.5);
+            transition: all 0.3s ease;
+            letter-spacing: 4px;
+        }
+        .btn-draw:hover { 
+            background: #d0077b; 
+            box-shadow: 0 0 25px rgba(252, 12, 151, 0.8);
+            transform: scale(1.03);
+        }
+        .btn-draw.active {
+            background: #3403b4;
+            box-shadow: 0 0 20px rgba(52, 3, 180, 0.6);
+        }
+
+        /* 黄色中奖弹窗 #fff600 10% */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .modal-content {
+            background: #111;
+            border: 3px solid #fff600;
+            padding: 40px 60px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 246, 0, 0.5);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal h2 { color: #fff600; font-size: 32px; margin-top: 0; }
+        .modal .winner-title { font-size: 54px; color: #ffffff; font-weight: bold; margin: 20px 0; }
+        .modal .winner-staff { font-size: 24px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+        .modal button {
+            background: #fff600; color: #000; font-weight: bold; font-size: 16px;
+            border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer;
+        }
+        @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎉 线上大抽奖系统 🎉</h1>
+    
+    <div class="select-group">
+        <select id="prize-select" onchange="updateRigHint()">
+            <option value="奖项A">🎁 抽奖轮次：第一轮 (A组内定)</option>
+            <option value="奖项B">🎁 抽奖轮次：第二轮 (B组内定)</option>
+            <option value="普通抽奖">🎲 随机抽奖轮次 (真正随机)</option>
+        </select>
+    </div>
+
+    <div class="display-box">
+        <div id="roll-teacher">准备就绪</div>
+        <div id="roll-staff"></div>
+    </div>
+
+    <button id="action-btn" class="btn-draw" onclick="toggleDraw()">开始抽奖</button>
+</div>
+
+<!-- 中奖弹窗 -->
+<div id="winner-modal" class="modal">
+    <div class="modal-content">
+        <h2>✨ 恭喜中奖 ✨</h2>
+        <div class="winner-title" id="modal-teacher">-</div>
+        <div class="winner-staff" id="modal-staff">-</div>
+        <button onclick="closeModal()">收下好运</button>
+    </div>
+</div>
+
+<script>
+    // 1. 从你提供的图片里完整提取的所有名单数据
+    const allMembers = [
+        { teacher: "Kiwi", lc: "", ec: "Marcus" },
+        { teacher: "Angie", lc: "", ec: "Celeste" },
+        { teacher: "Hanson", lc: "", ec: "Elva" },
+        { teacher: "Rachel", lc: "", ec: "Nicole" },
+        { teacher: "Abby", lc: "", ec: "Xueling" },
+        { teacher: "Melissa", lc: "", ec: "Derrick" },
+        { teacher: "Sophia", lc: "", ec: "Felicia" },
+        { teacher: "Happy", lc: "ZhiQing", ec: "" },
+        { teacher: "Jessie", lc: "Voilet", ec: "" },
+        { teacher: "Regina", lc: "Crystal", ec: "" },
+        { teacher: "Jenny", lc: "Chinfui", ec: "" },
+        { teacher: "Kelly", lc: "Qijing", ec: "" },
+        { teacher: "Madeline", lc: "Rocket", ec: "" },
+        { teacher: "Master Tan", lc: "Abbey", ec: "" },
+        { teacher: "Henry", lc: "Yiman", ec: "" },
+        { teacher: "Audrey", lc: "Chinfui", ec: "Marcus" },
+        { teacher: "Angeline", lc: "Qijing", ec: "Celeste" },
+        { teacher: "Joey", lc: "", ec: "Elva" },
+        { teacher: "KC", lc: "Abbey", ec: "Nicole" },
+        { teacher: "Kee", lc: "Rocket", ec: "Xueling" },
+        { teacher: "Tina", lc: "Yiman", ec: "Derrick" },
+        { teacher: "Eunice", lc: "", ec: "Felicia" },
+        { teacher: "Li Jia (Part Time)", lc: "ZhiQing", ec: "" },
+        { teacher: "Danny (Part Time)", lc: "Voilet", ec: "" },
+        { teacher: "Qing (Part Time)", lc: "Crystal", ec: "" }
+    ];
+
+    // 2. 完美的内定名单逻辑配置
+    // 无论是指定某一个人，还是指定某个特定组合，只要在这里配置即可。
+    // 在正式共享屏幕抽奖时，观众只能看到下拉框的“第一轮、第二轮”，完全不知道后台内定了谁。
+    const rigConfig = {
+        "奖项A": { teacher: "Angeline", lc: "Qijing", ec: "Celeste" }, // 示例：指定内定表格中的高亮绿色行
+        "奖项B": { teacher: "Tina", lc: "Yiman", ec: "Derrick" }       // 示例：指定内定另一名老师和对应的EC, LC
+    };
+
+    let timer = null;
+    let isRolling = false;
+
+    function toggleDraw() {
+        const btn = document.getElementById('action-btn');
+        const tScreen = document.getElementById('roll-teacher');
+        const sScreen = document.getElementById('roll-staff');
+        const currentPrize = document.getElementById('prize-select').value;
+
+        if (!isRolling) {
+            // === 启动滚动状态 ===
+            isRolling = true;
+            btn.innerText = "停止";
+            btn.classList.add('active');
+            
+            timer = setInterval(() => {
+                // 疯狂滚动期间：完全随机读取名单，营造绝对公平的假象
+                let randIdx = Math.floor(Math.random() * allMembers.length);
+                let item = allMembers[randIdx];
+                tScreen.innerText = item.teacher;
+                
+                // 动态拼装 LC 和 EC 显示
+                let staffText = "";
+                if(item.lc) staffText += `LC: ${item.lc}   `;
+                if(item.ec) staffText += `EC: ${item.ec}`;
+                sScreen.innerText = staffText;
+            }, 60);
+            
+        } else {
+            // === 点击停止（内定拦截核心） ===
+            isRolling = false;
+            clearInterval(timer);
+            btn.innerText = "开始抽奖";
+            btn.classList.remove('active');
+
+            let finalResult = null;
+
+            // 无痕判定：如果当前选择的轮次有预设内定，直接掉包结果
+            if (rigConfig[currentPrize]) {
+                finalResult = rigConfig[currentPrize];
+            } else {
+                // 否则真正随机抽取
+                let randIdx = Math.floor(Math.random() * allMembers.length);
+                finalResult = allMembers[randIdx];
+            }
+
+            // 更新大屏显示为最终内定的结果
+            tScreen.innerText = finalResult.teacher;
+            let staffText = "";
+            if(finalResult.lc) staffText += `LC: ${finalResult.lc}   `;
+            if(finalResult.ec) staffText += `EC: ${finalResult.ec}`;
+            sScreen.innerText = staffText;
+
+            // 延迟 300 毫秒弹出黄色大中奖框，仪式感拉满
+            setTimeout(() => {
+                document.getElementById('modal-teacher').innerText = finalResult.teacher;
+                document.getElementById('modal-staff').innerText = staffText || "超级幸运儿";
+                document.getElementById('winner-modal').style.display = 'flex';
+            }, 300);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('winner-modal').style.display = 'none';
+    }
+</script>
+</body>
+</html>
