@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>线上活动 - 幸运大抽奖总结版</title>
+    <title>线上活动 - 你真的懂咩抽签板</title>
     <style>
-        /* 黑色背景 000000 */
         body { 
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
             background-color: #000000; 
@@ -19,7 +18,6 @@
             box-sizing: border-box;
         }
 
-        /* 蓝色霓虹渐变边框 #3403b4 */
         .container { 
             width: 800px; 
             background: linear-gradient(135deg, #11013b 0%, #000000 100%);
@@ -28,7 +26,6 @@
             border: 2px solid #3403b4;
             box-shadow: 0 0 30px rgba(52, 3, 180, 0.4);
             text-align: center; 
-            transition: all 0.5s ease;
         }
 
         h1 { 
@@ -53,7 +50,6 @@
             outline: none;
         }
 
-        /* 滚动大屏 */
         .display-box { 
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -70,7 +66,6 @@
             letter-spacing: 2px;
         }
 
-        /* 粉色按钮 #fc0c97 */
         .btn-draw { 
             font-size: 22px; 
             font-weight: bold;
@@ -95,10 +90,9 @@
             box-shadow: 0 0 20px rgba(52, 3, 180, 0.6);
         }
 
-        /* 组合总结网格布局 */
         .summary-title {
             display: none;
-            color: #fff600; /* 黄色高亮 */
+            color: #fff600; 
             font-size: 22px;
             margin: 25px 0 15px 0;
             font-weight: bold;
@@ -109,15 +103,13 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-top: 10px;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             padding-right: 5px;
         }
-        /* 美化滚动条 */
         .result-grid::-webkit-scrollbar { width: 6px; }
         .result-grid::-webkit-scrollbar-thumb { background: #3403b4; border-radius: 3px; }
 
-        /* 卡片设计 */
         .result-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(52, 3, 180, 0.3);
@@ -127,12 +119,12 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            animation: fadeInUp 0.4s ease forwards;
+            animation: fadeInUp 0.3s ease forwards;
             opacity: 0;
         }
         .card-teacher {
             font-size: 20px;
-            color: #ffffff; /* 白色 50% 以上视觉权重 */
+            color: #ffffff; 
             font-weight: bold;
             margin-bottom: 5px;
         }
@@ -141,11 +133,11 @@
             color: rgba(255, 255, 255, 0.6);
         }
         .highlight-staff {
-            color: #fff600; /* 强力组合用黄色点缀 */
+            color: #fff600; 
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -168,13 +160,12 @@
 
     <button id="action-btn" class="btn-draw" onclick="toggleDraw()">开始抽奖</button>
 
-    <!-- 结果总结面板 -->
     <div class="summary-title" id="summary-hd">✨ 本轮中奖组合最终总结 ✨</div>
     <div class="result-grid" id="result-container"></div>
 </div>
 
 <script>
-    // 完整的名单数据
+    // 严格对照表格的原本顺序输入
     const groupA = [
         { teacher: "Kiwi", lc: "", ec: "Marcus" },
         { teacher: "Angie", lc: "", ec: "Celeste" },
@@ -227,7 +218,6 @@
         const currentPool = (selectedGroup === 'A') ? groupA : groupB;
 
         if (!isRolling) {
-            // === 开始滚动 ===
             isRolling = true;
             btn.innerText = "停止";
             btn.classList.add('active');
@@ -235,13 +225,11 @@
             container.innerHTML = "";
             
             timer = setInterval(() => {
-                // 屏幕大字疯狂闪烁任意组合，保持抽奖的动态感
                 let randIdx = Math.floor(Math.random() * currentPool.length);
                 mainScreen.innerText = `正在计算：${currentPool[randIdx].teacher}`;
             }, 50);
             
         } else {
-            // === 点击停止（一键出全组结果） ===
             isRolling = false;
             clearInterval(timer);
             btn.innerText = "开始抽奖";
@@ -250,15 +238,11 @@
             mainScreen.innerText = "🎉 抽取完成！";
             summaryHd.style.display = "block";
 
-            // 洗牌算法（Shuffle），让每次出来的卡片顺序打乱，显得是现场随机抽出来的
-            let shuffledPool = [...currentPool].sort(() => Math.random() - 0.5);
-
-            // 渲染出所有组合的卡片总结
-            shuffledPool.forEach((item, index) => {
+            // 彻底去除洗牌随机，严格按照上面列表的 100% 原始数据直接输出
+            currentPool.forEach((item, index) => {
                 let card = document.createElement('div');
                 card.className = 'result-card';
-                // 让卡片有一个帅气的逐个淡入流光效果
-                card.style.animationDelay = `${index * 0.05}s`;
+                card.style.animationDelay = `${index * 0.04}s`; // 快速梯次弹出
 
                 let staffText = [];
                 if(item.lc) staffText.push(`<span class="highlight-staff">LC:</span> ${item.lc}`);
