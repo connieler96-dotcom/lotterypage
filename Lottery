@@ -2,31 +2,34 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>线上活动 - 幸运大抽奖全自动版</title>
+    <title>线上活动 - 幸运大抽奖终极总结版</title>
     <style>
         body { font-family: sans-serif; background-color: #000; color: rgba(255,255,255,0.85); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { width: 800px; background: linear-gradient(135deg, #11013b 0%, #000 100%); padding: 40px; border-radius: 24px; border: 2px solid #3403b4; box-shadow: 0 0 30px rgba(52,3,180,0.4); text-align: center; }
+        .container { width: 850px; background: linear-gradient(135deg, #11013b 0%, #000 100%); padding: 40px; border-radius: 24px; border: 2px solid #3403b4; box-shadow: 0 0 30px rgba(52,3,180,0.4); text-align: center; transition: width 0.4s ease; }
         h1 { font-size: 32px; color: #fff; margin-top: 0; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .stage-badge { display: inline-block; background: rgba(52,3,180,0.6); border: 1px solid #3403b4; padding: 6px 20px; border-radius: 20px; font-size: 16px; margin-bottom: 20px; }
         .display-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; margin: 15px 0 25px 0; min-height: 80px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: #fff; font-weight: bold; }
-        .btn-draw { font-size: 22px; font-weight: bold; padding: 14px 60px; cursor: pointer; background: #fc0c97; color: white; border: none; border-radius: 50px; box-shadow: 0 0 20px rgba(252,12,151,0.5); transition: all 0.3s ease; }
+        .btn-draw { font-size: 22px; font-weight: bold; padding: 14px 60px; cursor: pointer; background: #fc0c97; color: white; border: none; border-radius: 50px; box-shadow: 0 0 20px rgba(252,12,151,0.5); transition: all 0.3s ease; outline: none; }
         .btn-draw:hover { background: #d0077b; transform: scale(1.02); }
         .btn-draw:disabled { background: #444 !important; box-shadow: none !important; cursor: not-allowed; color: #aaa; }
         .btn-draw.stage-next { background: #fff600; color: #000; box-shadow: 0 0 20px rgba(255,246,0,0.4); }
         .summary-title { display: none; color: #fff600; font-size: 24px; margin: 30px 0 15px 0; font-weight: bold; }
-        .list-container { display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; max-height: 380px; overflow-y: auto; margin-top: 15px; }
+        .list-container { display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; max-height: 420px; overflow-y: auto; margin-top: 15px; }
         .list-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 18px; }
-        .list-table th { background: #1a0259; color: #fff600; padding: 14px 20px; border-bottom: 1px solid #3403b4; position: sticky; top: 0; }
+        .list-table th { background: #1a0259; color: #fff600; padding: 14px 20px; border-bottom: 1px solid #3403b4; position: sticky; top: 0; z-index: 10; }
         .list-table td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff; }
         .list-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-        .fade-in-row { opacity: 0; animation: rowFadeIn 0.2s ease forwards; }
+        .fade-in-row { opacity: 0; animation: rowFadeIn 0.15s ease forwards; }
         .hl-label { color: rgba(255,255,255,0.5); font-size: 14px; margin-right: 5px; }
-        @keyframes rowFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .group-tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+        .tag-a { background: rgba(52, 3, 180, 0.4); color: #fff; border: 1px solid #3403b4; }
+        .tag-b { background: rgba(252, 12, 151, 0.2); color: #fc0c97; border: 1px solid #fc0c97; }
+        @keyframes rowFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="main-container">
     <h1>🎉 你真的懂咩？ 🎉</h1>
     <div class="stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
     <div class="display-box" id="main-screen">等待开启</div>
@@ -48,7 +51,6 @@
 </div>
 
 <script>
-    // 严格按表格完整名单录入
     const groupA = [
         { teacher: "Kiwi", lc: "", ec: "Marcus" },
         { teacher: "Angie", lc: "", ec: "Celeste" },
@@ -80,7 +82,7 @@
         { teacher: "Qing (Part Time)", lc: "Crystal", ec: "" }
     ];
 
-    let currentStage = 'START_A';
+    let currentStage = 'START_A'; // 'START_A', 'DONE_A', 'START_B', 'DONE_B', 'SHOW_ALL'
     let timer = null;
 
     function handleButtonClick() {
@@ -114,10 +116,52 @@
         else if (currentStage === 'START_B') {
             runRollingAnimation(groupB, () => {
                 currentStage = 'DONE_B';
-                btn.innerText = "✅ 抽奖全部结束";
-                btn.className = "btn-draw";
-                btn.disabled = true;
+                btn.innerText = "📊 生成 A + B 完整大总榜";
+                btn.className = "btn-draw stage-next";
+                btn.disabled = false;
             });
+        }
+        else if (currentStage === 'DONE_B') {
+            // 最后一气呵成：展示全量联合大列表
+            currentStage = 'SHOW_ALL';
+            stageBadge.innerText = "最终环节：🏆 完整荣耀大总榜";
+            stageBadge.style.background = "rgba(255, 246, 0, 0.2)";
+            stageBadge.style.borderColor = "#fff600";
+            stageBadge.style.color = "#fff600";
+            mainScreen.innerText = "✨ 恭喜所有获奖组合 ✨";
+            summaryHd.innerText = "✨ A + B 全体中奖组合荣耀总表 ✨";
+            
+            listBody.innerHTML = "";
+            
+            // 合并AB两组名单
+            const fullPool = [
+                ...groupA.map(i => ({...i, group: 'A'})), 
+                ...groupB.map(i => ({...i, group: 'B'}))
+            ];
+
+            // 渲染25行超大表
+            fullPool.forEach((item, index) => {
+                let tr = document.createElement('tr');
+                tr.className = 'fade-in-row';
+                tr.style.animationDelay = `${index * 0.02}s`; // 超快依次滑入
+
+                let staffDetails = [];
+                if(item.lc) staffDetails.push(`<span class="hl-label">LC:</span>${item.lc}`);
+                if(item.ec) staffDetails.push(`<span class="hl-label">EC:</span>${item.ec}`);
+                let staffText = staffDetails.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
+
+                let groupLabel = item.group === 'A' ? '<span class="group-tag tag-a">A组</span>' : '<span class="group-tag tag-b">B组</span>';
+
+                tr.innerHTML = `
+                    <td style="color: #fff600; font-weight: bold;">${index + 1}</td>
+                    <td style="font-weight: bold;">${item.teacher} ${groupLabel}</td>
+                    <td>${staffText}</td>
+                `;
+                listBody.appendChild(tr);
+            });
+
+            btn.innerText = "✅ 抽奖活动圆满结束";
+            btn.disabled = true;
         }
     }
 
@@ -141,29 +185,25 @@
         setTimeout(() => {
             clearInterval(timer);
             mainScreen.innerText = "🎉 抽取成功！";
+            summaryHd.innerText = "✨ 本轮中奖组合最终结果 ✨";
             summaryHd.style.display = "block";
             listWrapper.style.display = "block";
 
             pool.forEach((item, index) => {
                 let tr = document.createElement('tr');
-                tr.className = 'fade-in-row';
-                tr.style.animationDelay = `${index * 0.04}s`;
-
-                let staffDetails = [];
-                if(item.lc) staffDetails.push(`<span class="hl-label">LC:</span>${item.lc}`);
-                if(item.ec) staffDetails.push(`<span class="hl-label">EC:</span>${item.ec}`);
-                let staffText = staffDetails.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
-
-                tr.innerHTML = `
-                    <td style="color: #fff600; font-weight: bold;">${index + 1}</td>
-                    <td style="font-weight: bold;">${item.teacher}</td>
-                    <td>${staffText}</td>
-                `;
-                listBody.appendChild(tr);
-            });
-            onComplete();
-        }, 3000);
-    }
-</script>
-</body>
-</html>
+tr.className = 'fade-in-row';
+tr.style.animationDelay = ${index * 0.04}s;
+let staffDetails = [];
+if(item.lc) staffDetails.push(<span class="hl-label">LC:</span>${item.lc});
+if(item.ec) staffDetails.push(<span class="hl-label">EC:</span>${item.ec});
+let staffText = staffDetails.join('     ') || '独立单元';
+tr.innerHTML = `
+${index + 1}
+${item.teacher}
+${staffText}
+`;
+listBody.appendChild(tr);
+});
+onComplete();
+}, 3000);
+}
