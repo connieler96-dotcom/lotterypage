@@ -2,174 +2,35 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>线上活动 - 幸运大抽奖全自动版</title>
     <style>
-        body { 
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
-            background-color: #000000; 
-            color: rgba(255, 255, 255, 0.85); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0;
-            padding: 30px;
-            box-sizing: border-box;
-        }
-
-        .container { 
-            width: 850px; 
-            background: linear-gradient(135deg, #11013b 0%, #000000 100%);
-            padding: 40px; 
-            border-radius: 24px; 
-            border: 2px solid #3403b4;
-            box-shadow: 0 0 30px rgba(52, 3, 180, 0.4);
-            text-align: center; 
-        }
-
-        h1 { 
-            font-size: 32px; 
-            color: #ffffff; 
-            margin-top: 0;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .current-stage-badge {
-            display: inline-block;
-            background: rgba(52, 3, 180, 0.6);
-            border: 1px solid #3403b4;
-            padding: 6px 20px;
-            border-radius: 20px;
-            font-size: 16px;
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .display-box { 
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
-            margin: 15px 0 25px 0;
-            min-height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 38px; 
-            color: #ffffff; 
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .btn-draw { 
-            font-size: 22px; 
-            font-weight: bold;
-            padding: 14px 60px; 
-            cursor: pointer; 
-            background: #fc0c97; 
-            color: white; 
-            border: none; 
-            border-radius: 50px; 
-            box-shadow: 0 0 20px rgba(252, 12, 151, 0.5);
-            transition: all 0.3s ease;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
-        }
-        .btn-draw:hover { 
-            background: #d0077b; 
-            box-shadow: 0 0 25px rgba(252, 12, 151, 0.8);
-            transform: scale(1.02);
-        }
-        .btn-draw:disabled {
-            background: #444 !important;
-            box-shadow: none !important;
-            cursor: not-allowed;
-        }
-        .btn-draw.stage-next {
-            background: #fff600;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 246, 0, 0.4);
-        }
-        .btn-draw.stage-next:hover {
-            background: #d4cc00;
-        }
-
-        .summary-title {
-            display: none;
-            color: #fff600; 
-            font-size: 24px;
-            margin: 30px 0 15px 0;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* 列表展示样式优化 */
-        .list-container {
-            display: none;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 15px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        .list-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 18px;
-        }
-
-        .list-table th {
-            background: rgba(52, 3, 180, 0.3);
-            color: #fff600;
-            padding: 14px 20px;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(52, 3, 180, 0.5);
-        }
-
-        .list-table td {
-            padding: 14px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-        }
-
-        .list-table tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .list-table tr {
-            opacity: 0;
-            animation: rowFadeIn 0.3s ease forwards;
-        }
-
-        .highlight-label {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body { font-family: sans-serif; background-color: #000; color: rgba(255,255,255,0.85); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { width: 800px; background: linear-gradient(135deg, #11013b 0%, #000 100%); padding: 40px; border-radius: 24px; border: 2px solid #3403b4; box-shadow: 0 0 30px rgba(52,3,180,0.4); text-align: center; }
+        h1 { font-size: 32px; color: #fff; margin-top: 0; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .stage-badge { display: inline-block; background: rgba(52,3,180,0.6); border: 1px solid #3403b4; padding: 6px 20px; border-radius: 20px; font-size: 16px; margin-bottom: 20px; }
+        .display-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; margin: 15px 0 25px 0; min-height: 80px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: #fff; font-weight: bold; }
+        .btn-draw { font-size: 22px; font-weight: bold; padding: 14px 60px; cursor: pointer; background: #fc0c97; color: white; border: none; border-radius: 50px; box-shadow: 0 0 20px rgba(252,12,151,0.5); transition: all 0.3s ease; }
+        .btn-draw:hover { background: #d0077b; transform: scale(1.02); }
+        .btn-draw:disabled { background: #444 !important; box-shadow: none !important; cursor: not-allowed; color: #aaa; }
+        .btn-draw.stage-next { background: #fff600; color: #000; box-shadow: 0 0 20px rgba(255,246,0,0.4); }
+        .summary-title { display: none; color: #fff600; font-size: 24px; margin: 30px 0 15px 0; font-weight: bold; }
+        .list-container { display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; max-height: 380px; overflow-y: auto; margin-top: 15px; }
+        .list-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 18px; }
+        .list-table th { background: #1a0259; color: #fff600; padding: 14px 20px; border-bottom: 1px solid #3403b4; position: sticky; top: 0; }
+        .list-table td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff; }
+        .list-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        .fade-in-row { opacity: 0; animation: rowFadeIn 0.2s ease forwards; }
+        .hl-label { color: rgba(255,255,255,0.5); font-size: 14px; margin-right: 5px; }
         @keyframes rowFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎉 你真的懂咩？ 🎉</h1>
-    
-    <!-- 顶部状态指示，代替下拉框，更具仪式感 -->
-    <div class="current-stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
-
-    <div class="display-box" id="main-screen">
-        等待开启
-    </div>
-
-    <button id="action-btn" class="btn-draw" onclick="startAutoDraw()">开始抽奖</button>
+    <h1>🎉 线上大抽奖系统 🎉</h1>
+    <div class="stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
+    <div class="display-box" id="main-screen">等待开启</div>
+    <button id="action-btn" class="btn-draw" onclick="handleButtonClick()">开始抽奖</button>
 
     <div class="summary-title" id="summary-hd">✨ 本轮中奖组合最终结果 ✨</div>
     <div class="list-container" id="list-wrapper">
@@ -181,15 +42,13 @@
                     <th style="width: 45%;">🏆 关联组合 (LC / EC)</th>
                 </tr>
             </thead>
-            <tbody id="list-body">
-                <!-- 列表数据动态插入 -->
-            </tbody>
+            <tbody id="list-body"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // 严格对照表格的原本顺序输入
+    // 严格按表格完整名单录入
     const groupA = [
         { teacher: "Kiwi", lc: "", ec: "Marcus" },
         { teacher: "Angie", lc: "", ec: "Celeste" },
@@ -221,10 +80,10 @@
         { teacher: "Qing (Part Time)", lc: "Crystal", ec: "" }
     ];
 
-    let currentStage = 'A'; // 追踪阶段：'A', 'A_DONE', 'B', 'B_DONE'
+    let currentStage = 'START_A';
     let timer = null;
 
-    function startAutoDraw() {
+    function handleButtonClick() {
         const btn = document.getElementById('action-btn');
         const mainScreen = document.getElementById('main-screen');
         const listWrapper = document.getElementById('list-wrapper');
@@ -232,10 +91,16 @@
         const summaryHd = document.getElementById('summary-hd');
         const stageBadge = document.getElementById('stage-badge');
 
-        // 状态分流逻辑
-        if (currentStage === 'A_DONE') {
-            // A组抽完，点击进入B组准备状态
-            currentStage = 'B';
+        if (currentStage === 'START_A') {
+            runRollingAnimation(groupA, () => {
+                currentStage = 'DONE_A';
+                btn.innerText = "➡️ 切换至 B 组抽奖";
+                btn.className = "btn-draw stage-next";
+                btn.disabled = false;
+            });
+        } 
+        else if (currentStage === 'DONE_A') {
+            currentStage = 'START_B';
             stageBadge.innerText = "当前环节：🎁 B 组幸运抽取";
             stageBadge.style.background = "rgba(252, 12, 151, 0.3)";
             stageBadge.style.borderColor = "#fc0c97";
@@ -245,39 +110,48 @@
             listBody.innerHTML = "";
             btn.innerText = "开始抽奖";
             btn.className = "btn-draw";
-            return;
+        } 
+        else if (currentStage === 'START_B') {
+            runRollingAnimation(groupB, () => {
+                currentStage = 'DONE_B';
+                btn.innerText = "✅ 抽奖全部结束";
+                btn.className = "btn-draw";
+                btn.disabled = true;
+            });
         }
+    }
 
-        const currentPool = (currentStage === 'A') ? groupA : groupB;
+    function runRollingAnimation(pool, onComplete) {
+        const btn = document.getElementById('action-btn');
+        const mainScreen = document.getElementById('main-screen');
+        const listWrapper = document.getElementById('list-wrapper');
+        const listBody = document.getElementById('list-body');
+        const summaryHd = document.getElementById('summary-hd');
 
-        // 禁用按钮，防止滚动期间误触
         btn.disabled = true;
         listWrapper.style.display = "none";
         summaryHd.style.display = "none";
         listBody.innerHTML = "";
 
-        // 开始倒计时滚动假象
         timer = setInterval(() => {
-            let randIdx = Math.floor(Math.random() * currentPool.length);
-            mainScreen.innerText = `🎲 正在计算中：${currentPool[randIdx].teacher}`;
+            let randIdx = Math.floor(Math.random() * pool.length);
+            mainScreen.innerText = `🎲 正在计算中：${pool[randIdx].teacher}`;
         }, 50);
 
-        // 3秒钟后全自动停止并列出数据
         setTimeout(() => {
             clearInterval(timer);
-            btn.disabled = false;
             mainScreen.innerText = "🎉 抽取成功！";
             summaryHd.style.display = "block";
             listWrapper.style.display = "block";
 
-            // 严格按原本名单顺序输出列表结构
-            currentPool.forEach((item, index) => {
+            pool.forEach((item, index) => {
                 let tr = document.createElement('tr');
-                tr.style.animationDelay = `${index * 0.05}s`; // 列表行优雅地依次滑入
+                tr.className = 'fade-in-row';
+                tr.style.animationDelay = `${index * 0.04}s`;
 
                 let staffDetails = [];
-                if(item.lc) staffDetails.push(`<span class="highlight-label">LC:</span>${item.lc}`);
-                if(item.ec) staffDetails.push(`<span class="highlight-label">EC:</span>${item.ec}`);
+                if(item.lc) staffDetails.push(`<span class="hl-label">LC:</span>${item.lc}`);
+                if(item.ec) staffDetails.push(`<span class="hl-label">EC:</span>${item.ec}`);
                 let staffText = staffDetails.join(' &nbsp;&nbsp;&nbsp; ') || '<span style="color:rgba(255,255,255,0.3)">独立单元</span>';
 
                 tr.innerHTML = `
@@ -287,10 +161,9 @@
                 `;
                 listBody.appendChild(tr);
             });
-
-            // 智能更新下一步按钮功能，不用再点开始抽奖
-            if (currentStage === 'A') {
-                currentStage = 'A_DONE';
-                btn.innerText = "➡️ 切换至 B 组抽奖";
-                btn.className = "btn-draw stage-next";
-            } else {
+            onComplete();
+        }, 3000);
+    }
+</script>
+</body>
+</html>
