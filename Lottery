@@ -27,7 +27,7 @@
 <body>
 
 <div class="container">
-    <h1>🎉 线上大抽奖系统 🎉</h1>
+    <h1>🎉 你真的懂咩？ 🎉</h1>
     <div class="stage-badge" id="stage-badge">当前环节：🎁 A 组幸运抽取</div>
     <div class="display-box" id="main-screen">等待开启</div>
     <button id="action-btn" class="btn-draw" onclick="handleButtonClick()">开始抽奖</button>
